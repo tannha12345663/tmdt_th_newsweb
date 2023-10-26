@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1fcca53a9fb549c2a9ef400c33cce38e" Name="Diagram1" ZoomLevel="62">
+        <EntityTypeShape EntityType="TMDT_TH_newsWebModel.BaiViet" Width="1.5" PointX="5.25" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TMDT_TH_newsWebModel.BinhLuan" Width="1.5" PointX="9.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TMDT_TH_newsWebModel.ChucVu" Width="1.5" PointX="0.75" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="TMDT_TH_newsWebModel.GoiDichVu" Width="1.5" PointX="5.25" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="TMDT_TH_newsWebModel.KhachHang" Width="1.5" PointX="7.5" PointY="7.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TMDT_TH_newsWebModel.LoaiKH" Width="1.5" PointX="5.25" PointY="15.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="TMDT_TH_newsWebModel.NhanVien" Width="1.5" PointX="3" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="TMDT_TH_newsWebModel.QuangCao" Width="1.5" PointX="5.25" PointY="11.25" IsExpanded="true" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_BaiViet_KhachHang" ManuallyRouted="false" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_BaiViet_NhanVien" ManuallyRouted="false" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_BinhLuan_BaiViet" ManuallyRouted="false" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_BinhLuan_KhachHang" ManuallyRouted="false" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_BinhLuan_NhanVien" ManuallyRouted="false" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_NhanVien_ChucVu" ManuallyRouted="false" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_GoiDichVu_NhanVien" ManuallyRouted="false" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_KhachHang_GoiDichVu" ManuallyRouted="false" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_KhachHang_LoaiKH" ManuallyRouted="false" />
+        <AssociationConnector Association="TMDT_TH_newsWebModel.FK_QuangCao_NhanVien" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

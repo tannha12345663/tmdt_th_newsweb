@@ -1,0 +1,509 @@
+﻿@model IEnumerable<tmdt_th_newsweb.Models.BaiViet>
+@using tmdt_th_newsweb.Models;
+@{
+    ViewBag.Title = "Danh sách tin tức";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.qltt0 = "active";
+    ViewBag.qltt1 = "show";
+    ViewBag.qltt2 = "active";
+}
+
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+@{
+    var checkmess = (string)TempData["messageAlert"];
+    if (checkmess == "success0")
+    {
+        <script>
+            swal({
+                title: "Thêm bài viết thành công",
+                text: "Bài viết với tiêu đề @TempData["tieude"] đã được thêm mới",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+    }
+    else if (checkmess == "success1")
+    {
+        <script>
+            swal({
+                title: "Chỉnh sửa tin tức thành công",
+                text: "Mã tin tức @TempData["matt"] đã được chỉnh sửa",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+    }
+    else if (checkmess == "success2")
+    {
+        <script>
+            swal({
+                title: "Cập nhật chi tiết công thức thành công",
+                text: "Chi tiết công thức @TempData["idCT"] đã được cập nhật mới",
+                icon: "success",
+                button: "OK",
+            });
+        </script>
+    }
+    else if (checkmess == "error0")
+    {
+        <script>
+            swal({
+                title: "Thêm bài viết không thành công",
+                text: "Bài viết với tiêu đề @TempData["tieude"] đã bị hủy. Nội dung lỗi : @TempData["mess"]",
+                icon: "error",
+                button: "OK",
+            });
+        </script>
+    }
+    else if (checkmess == "error1")
+    {
+        <script>
+            swal({
+                title: "Chỉnh sửa chi tiết không thành công",
+                text: "Mã tin tức @TempData["matt"] không thể thêm chi tiết. Nội dung lỗi : @TempData["messER"]",
+                icon: "error",
+                button: "OK",
+            });
+        </script>
+    }
+    else if (checkmess == "error2")
+    {
+        <script>
+            swal({
+                title: "Cập nhật chi tiết công thức không thành công",
+                text: "Công thức @TempData["idCT"] không thể thêm chi tiết. Nội dung lỗi : @TempData["messER"]",
+                icon: "error",
+                button: "OK",
+            });
+        </script>
+    }
+}
+
+<div class="container-fluid">
+    <ul class="nav nav-tabs">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#menu0"><h4 class="btn btn-outline-warning">Danh sách tin tức còn hoạt động</h4></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#menu1"><h5 class="btn btn-outline-info">Danh sách tin tức bị thu hồi</h5></a>
+            </li>
+        </ul>
+    </ul>
+    @*Page Heading*@
+    <div class="tab-content">
+        <div id="menu0" class="tab-pane active">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Danh sách tin tức đang tồn tại trong hệ thống </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="button-group">
+                                <button class="btn btn-sm btn-success" data-target="#myModal" data-toggle="modal"><i class="fa fa-plus" aria-hidden="true"></i> Thêm mới</button>
+                                <a class="btn btn-sm btn-secondary" type="button" title="Sao chép" href="~/Admin/DSTT"><i class="fa fa-retweet" aria-hidden="true"></i> Làm mới</a>
+                                <button class="btn btn-sm btn-primary" type="button" id="btn-ImportExcel" data-target="#importModal" data-toggle="modal"><i class="fas fa-file-import"></i> Nhập Excel</button>
+                                <button class="btn btn-sm btn-info" id="button_excel" title="Xuất file Excel"><i class="fas fa-file-excel"></i> Xuất Excel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="table-responsive">
+                        <table data-cols-width="30,20,20,20,20,20,40" class="table table-hover table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Tiêu đề</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Nội dung</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Ngày đăng</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID nhân viên</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID khách hàng</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Trạng thái</th>
+                                    <th data-exclude="true">Chức năng</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr data-exclude="true">
+                                    <th>ID</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Nội dung</th>
+                                    <th>Ngày đăng</th>
+                                    <th>ID nhân viên</th>
+                                    <th>ID khách hàng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @{
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td data-b-a-s="thin">@item.MaBV</td>
+                                            <td data-b-a-s="thin">@item.TieuDe</td>
+                                            <td data-b-a-s="thin">@item.NoiDung</td>
+                                            <td data-b-a-s="thin">@item.NgayDang</td>
+                                            <td data-b-a-s="thin">@item.MaNV</td>
+                                            <td data-b-a-s="thin">@item.MaKH</td>
+                                            @{
+                                                if (item.TrangThai == 0)
+                                                {
+                                                    <td data-b-a-s="thin">
+                                                        <div class="btn btn-sm btn-warning">
+                                                            Chưa duyệt
+                                                        </div>
+                                                    </td>
+                                                }
+                                                else if (item.TrangThai == 1)
+                                                {
+                                                    <td data-b-a-s="thin">
+                                                        <div class="btn btn-sm btn-success">
+                                                            Đã duyệt
+                                                        </div>
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td data-b-a-s="thin">
+                                                        <div class="btn btn-sm btn-info">
+                                                            Từ chối
+                                                        </div>
+                                                    </td>
+                                                }
+                                            }
+                                            <td>
+                                                <button class="btn btn-success btn-sm edit" id="ChinhSuaTT">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-success btn-sm save edit" style="display:none" id="luutt"><i class="fa fa-check" aria-hidden="true"></i></button>
+                                                <button class="btn btn-danger btn-sm edit" id="thuhoiTT">
+                                                    <i class="fa fa-times" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div id="menu1" class="tab-pane fade">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Danh sách công thức đang tạm ngừng triển khai trong hệ thống </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="button-group">
+                                    <button class="btn btn-sm btn-info" id="button_excel1" title="In"><i class="fas fa-file-excel"></i> Xuất Excel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="table-responsive">
+                            <table data-cols-width="30,20,20,20,20,20,30" class="table table-hover table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID</th>
+                                        <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Tiêu đề</th>
+                                        <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Nội dung</th>
+                                        <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Chi nhánh</th>
+                                        <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">NV đăng</th>
+                                        <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Ngày đăng</th>
+                                        <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Trạng thái</th>
+                                        <th data-exclude="true">Chức năng</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr data-exclude="true">
+                                        <th>ID</th>
+                                        <th>Tiêu đề</th>
+                                        <th>Nội dung</th>
+                                        <th>Chi nhánh</th>
+                                        <th>NV đăng</th>
+                                        <th>Ngày đăng</th>
+                                        <th>Trạng thái</th>
+                                        <th>Chức năng</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    @{
+                                        foreach (var item in Model)
+                                        {
+                                            if (item.Lock == false)
+                                            {
+                                                <tr>
+                                                    <td data-b-a-s="thin">@item.ID</td>
+                                                    <td data-b-a-s="thin">@item.TieuDe</td>
+                                                    <td data-b-a-s="thin">@item.NoiDung</td>
+                                                    <td data-b-a-s="thin">@item.LocationID</td>
+                                                    <td data-b-a-s="thin">@item.MaNV</td>
+                                                    <td data-b-a-s="thin">@item.NgayDang</td>
+                                                    @{
+                                                        if (item.Lock == true)
+                                                        {
+                                                            <td data-b-a-s="thin">
+                                                                <div class="btn btn-sm btn-warning" style="width:100px">
+                                                                    Bình thường
+                                                                </div>
+                                                            </td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td data-b-a-s="thin">
+                                                                <div class="btn btn-sm btn-info">
+                                                                    Tạm ngừng
+                                                                </div>
+                                                            </td>
+                                                        }
+                                                    }
+                                                    <td>
+                                                        <button class="btn btn-primary btn-sm edit" id="phuchoiTT">
+                                                            <i class="fa fa-redo" aria-hidden="true"></i>
+                                                        </button>
+
+                                                        <button class="btn btn-danger btn-sm edit" id="xoaTT">
+                                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+</div>
+<!--Modal-->
+<!--Phần modal thêm mới tin tức-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-mdb-backdrop="true" data-mdb-keyboard="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myModalLabel">Thêm mới tin tức cho chi nhánh</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="~/Admin/ThemTT" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="row" id="nd">
+                        <div class="form-group form-inline col-lg-12" style="height:40px;">
+                            <label class="control-label col-sm-5" for="TenCT">Nhập tiêu đề: </label>
+                            <input class="form-control text-box single-line col-sm-5" id="TieuDe" name="TieuDe" type="text" required>
+                            <span class="control-label input-group-addon" id="icon1"></span>
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class=" form-group col-sm-5">
+                                <p id="mess1"></p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label class="control-label col-sm-5" for="TenCT">Nhập nội dung : </label>
+                            <textarea class="form-control" placeholder="Nhập nội dung...." name="NoiDung" id="NoiDung" style="height:100px" required></textarea>
+                            <span class="control-label input-group-addon" id="icon7"></span>
+                            <div class="col-sm-5">
+                                <p id="mess7"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary" id="btnAdd">Thêm mới</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!--Phần model chỉnh sửa tin tức-->
+<div class="modal fade" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" data-mdb-backdrop="true" data-mdb-keyboard="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 style="text-align:center" class="modal-title" id="myModalLabelE">Cập nhật thông tin thiết bị</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="formEdit" action="~/Admin/ChinhSuaTT" enctype="multipart/form-data" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="row" id="nd">
+                        <div class="form-group form-inline col-lg-12" style="height:40px;">
+                            <label class="control-label col-sm-5" for="IDMA">Mã tin tức: </label>
+                            <input class="form-control text-box single-line col-sm-5" id="ID" name="ID" type="text" hidden required>
+                            <input class="form-control text-box single-line col-sm-5" id="IDED1" disabled type="text">
+                            <span class="control-label input-group-addon" id="icon6"></span>
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <p id="mess6"></p>
+                            </div>
+                        </div>
+                        <div class="form-group form-inline col-lg-12" style="height:40px;">
+                            <label class="control-label col-sm-5" for="TenCT">Nhập tiêu đề: </label>
+                            <input class="form-control text-box single-line col-sm-5" id="EDTieuDe" name="TieuDe" type="text" required>
+                            <span class="control-label input-group-addon" id="icon1"></span>
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class=" form-group col-sm-5">
+                                <p id="mess1"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-inline col-lg-12">
+                            <label class="control-label col-sm-5">Chọn ảnh 1: </label>
+                            <div class="input-group col-sm-6">
+                                <input type="file" id="HinhAnh1" name="HinhAnh1" accept="image/*">
+                                <span class="input-group-addon" id="icon3">
+
+                                </span>
+                            </div>
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <p id="mess3"></p>
+                            </div>
+                        </div>
+
+                        <!-- Thêm thẻ img để hiển thị hình ảnh 1 -->
+                        <div class="form-group col-md-12">
+
+                            <label class="control-label col-sm-5" for="TenCT">Hình ảnh 1 đã chọn: </label>
+                            <img src="" alt="Hình ảnh đã chọn" id="selectedImage1" style="max-width: 100%; max-height: 200px;">
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-9" style="text-align:end">
+                                <button type="button" class="btn btn-danger btn-remove-image" id="btnRemoveImage1" style="display: none;">
+                                    <i class="fa fa-times"></i> Xóa ảnh
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-inline col-lg-12">
+                            <label class="control-label col-sm-5">Chọn ảnh 2: </label>
+                            <div class="input-group col-sm-6">
+                                <input type="file" id="HinhAnh2" name="HinhAnh2" accept="image/*">
+                                <span class="input-group-addon" id="icon4">
+
+                                </span>
+                            </div>
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <p id="mess4"></p>
+                            </div>
+                        </div>
+
+                        <!-- Thêm thẻ img để hiển thị hình ảnh 2 -->
+                        <div class="form-group col-md-12">
+
+                            <label class="control-label col-sm-5" for="TenCT">Hình ảnh 2 đã chọn: </label>
+                            <img src="" alt="Hình ảnh đã chọn" id="selectedImage2" style="max-width: 100%; max-height: 200px;">
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-9" style="text-align:end">
+                                <button type="button" class="btn btn-danger btn-remove-image" id="btnRemoveImage2" style="display: none;">
+                                    <i class="fa fa-times"></i> Xóa ảnh
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group form-inline col-lg-12">
+                            <label class="control-label col-sm-5">Chọn ảnh 3: </label>
+                            <div class="input-group col-sm-6">
+                                <input type="file" id="HinhAnh3" name="HinhAnh3" accept="image/*">
+                                <span class="input-group-addon" id="icon5">
+
+                                </span>
+                            </div>
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <p id="mess5"></p>
+                            </div>
+                        </div>
+
+                        <!-- Thêm thẻ img để hiển thị hình ảnh 3 -->
+                        <div class="form-group col-md-12">
+
+                            <label class="control-label col-sm-5" for="TenCT">Hình ảnh 3 đã chọn: </label>
+                            <img src="" alt="Hình ảnh đã chọn" id="selectedImage3" style="max-width: 100%; max-height: 200px;">
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-9" style="text-align:end">
+                                <button type="button" class="btn btn-danger btn-remove-image" id="btnRemoveImage3" style="display: none;">
+                                    <i class="fa fa-times"></i> Xóa ảnh
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group form-inline col-lg-12">
+                            <label class="control-label col-sm-5" for="TenTK">Chọn chi nhánh: </label>
+                            <select class="form-control" name="LocationID" id="EDLocationID" required>
+                                <option selected disabled>--Vui lòng chọn--</option>
+                                @*@{ foreach (var item01 in dscn)
+                                        {
+                                            <option value="@item01.LocationID">@item01.TenCN</option>
+                                        }
+                                    }*@
+                            </select>
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class=" form-group col-sm-5">
+                                <p id="mess6"></p>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-12">
+                            <label class="control-label col-sm-5" for="TenCT">Nhập nội dung : </label>
+                            <textarea class="form-control" placeholder="Nhập nội dung...." name="NoiDung" id="EDNoiDung" style="height:100px" required></textarea>
+                            <span class="control-label input-group-addon" id="icon7"></span>
+                            <div class="col-sm-5">
+                                <p id="mess7"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary" id="btnEdit">Cập nhật</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section script{
+    <script src="~/Content/js/tableToExcel.js"></script>
+    <!-- Page level plugins -->
+    <script src="~/Content/Vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Content/Vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#dataTable').DataTable({
+                "language": {
+                    "url": '@Url.Content("~/Content/Vendor/datatables/json.json")'
+                }
+            });
+        });
+    </script>
+}
