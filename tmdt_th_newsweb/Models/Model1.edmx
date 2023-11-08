@@ -257,6 +257,9 @@
           <Parameter Name="MaCV" Type="varchar" Mode="In" />
           <Parameter Name="HinhAnh" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="sp_XetDuyetLaiTT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="idbv" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="sp_XoaBV" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="idbv" Type="varchar" Mode="In" />
         </Function>
@@ -642,7 +645,10 @@
             <Parameter Name="HinhAnh" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_XoaNV">
-            <Parameter Name="MaNV" Mode="In" Type="String" />
+          <Parameter Name="MaNV" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_XetDuyetLaiTT">
+            <Parameter Name="idbv" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
       </Schema>
@@ -759,6 +765,7 @@
           <FunctionImportMapping FunctionImportName="sp_ChinhSuaNV" FunctionName="TMDT_TH_newsWebModel.Store.sp_ChinhSuaNV" />
           <FunctionImportMapping FunctionImportName="sp_ThemNV" FunctionName="TMDT_TH_newsWebModel.Store.sp_ThemNV" />
           <FunctionImportMapping FunctionImportName="sp_XoaNV" FunctionName="TMDT_TH_newsWebModel.Store.sp_XoaNV" />
+          <FunctionImportMapping FunctionImportName="sp_XetDuyetLaiTT" FunctionName="TMDT_TH_newsWebModel.Store.sp_XetDuyetLaiTT" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

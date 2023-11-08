@@ -151,6 +151,27 @@ namespace tmdt_th_newsweb.Controllers
             }
             return Json(new { success = false }, JsonRequestBehavior.AllowGet);
         }
+        //Xét duyệt lại bài viết
+        [HttpPost]
+        public ActionResult xetDuyetLaiTT(string MaBV)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.sp_XetDuyetLaiTT(MaBV);
+                    db.SaveChanges();
+                    return Json(new { success = true, mabv = MaBV }, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception e)
+                {
+                    return Json(new { success = false, nd = e.InnerException.Message, mabv = MaBV }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return Json(new { success = false }, JsonRequestBehavior.AllowGet);
+        }
+
+
         //Danh sách nhân viên
         public ActionResult DSNV()
         {

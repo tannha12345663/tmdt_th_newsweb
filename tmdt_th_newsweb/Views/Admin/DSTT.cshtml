@@ -87,14 +87,9 @@
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#menu0"><h4 class="btn btn-outline-warning">Danh sách tin tức còn hoạt động</h4></a>
             </li>
-            @{
-                if (user.MaCV == "Admin")
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#menu1"><h5 class="btn btn-outline-info">Danh sách tin tức bị từ chối</h5></a>
-                    </li>
-                }
-            }
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#menu1"><h5 class="btn btn-outline-info">Danh sách tin tức bị từ chối</h5></a>
+            </li>
 
         </ul>
     </ul>
@@ -147,7 +142,7 @@
                                 @{
                                     foreach (var item in Model)
                                     {
-                                        if (item.TrangThai == 0 || item.TrangThai == 1)
+                                        if (item.TrangThai == 0 || item.TrangThai == 1 || item.TrangThai == 3)
                                         {
                                             <tr>
                                                 <td data-b-a-s="thin">@item.MaBV</td>
@@ -168,43 +163,54 @@
                                                     }
                                                     else if (item.TrangThai == 1)
                                                     {
+
+
                                                         <td data-b-a-s="thin">
                                                             <div class="btn btn-sm btn-success">
                                                                 Đã duyệt
                                                             </div>
                                                         </td>
                                                     }
+                                                    else
+                                                    {
+                                                        <td data-b-a-s="thin">
+                                                            <div class="btn btn-sm btn-warning">
+                                                                Yêu cầu xét duyêt lại
+                                                            </div>
+                                                        </td>
+                                                    }
                                                 }
                                             <td>
                                                 @{
-                                                    if (item.TrangThai == 0 || (user.MaNV == "NV" && item.MaNV == user.MaNV))
-                                                    {
-
-
-
-                                                        if (user.MaCV == "Admin")
-                                                        {
-                                                            <button class="btn btn-success btn-sm save edit" id="duyetTT">
-                                                                <i class="fa fa-check"></i>
-                                                            </button>
-                                                            <button class="btn btn-danger btn-sm edit" id="tuchoiTT">
-                                                                <i class="fa fa-times" aria-hidden="true"></i>
-                                                            </button>
-                                                        }
-
-                                                    }
-                                                    else if (user.MaCV == "Admin" && item.TrangThai == 1)
+                                                    if (user.MaCV == "Admin" && (item.TrangThai == 0 || item.TrangThai == 3))
                                                     {
                                                         <button class="btn btn-success btn-sm edit" id="ChinhSuaTT">
                                                             <i class="fa fa-edit"></i>
                                                         </button>
+                                                        <button class="btn btn-success btn-sm save edit" id="duyetTT">
+                                                            <i class="fa fa-check"></i>
+                                                        </button>
+                                                        <button class="btn btn-danger btn-sm edit" id="tuchoiTT">
+                                                            <i class="fa fa-times" aria-hidden="true"></i>
+                                                        </button>
+
                                                     }
-                                                    <button class="btn btn-danger btn-sm edit" id="xoaTT">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
+                                                    else if ((user.MaCV == "Admin" && item.TrangThai > 0) || (user.MaCV == "NV" && item.TrangThai == 0 || item.TrangThai == 3))
+                                                    {
+
+                                                        <button class="btn btn-success btn-sm edit" id="ChinhSuaTT">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+
+                                                    }
+                                                    if (user.MaCV == "Admin")
+                                                    {
+                                                        <button class="btn btn-danger btn-sm edit" id="xoaTT">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    }
+
                                                 }
-
-
                                             </td>
                                             </tr>
                                         }
@@ -217,85 +223,91 @@
                 </div>
             </div>
         </div>
-        @{
-            if (user.MaCV == "Admin")
-            {
-                <div id="menu1" class="tab-pane fade">
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Danh sách công thức đang tạm ngừng triển khai trong hệ thống </h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-sm-5">
-                                    <div class="button-group">
-                                        <button class="btn btn-sm btn-info" id="button_excel1" title="In"><i class="fas fa-file-excel"></i> Xuất Excel</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <br />
-                            <div class="table-responsive">
-                                <table data-cols-width="30,20,20,20,20,20,30" class="table table-hover table-bordered" id="dataTable1" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID</th>
-                                            <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Tiêu đề</th>
-                                            <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Nội dung</th>
-                                            <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Ngày đăng</th>
-                                            <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID nhân viên</th>
-                                            <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID khách hàng</th>
-                                            <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Trạng thái</th>
-                                            <th data-exclude="true">Chức năng</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr data-exclude="true">
-                                            <th>ID</th>
-                                            <th>Tiêu đề</th>
-                                            <th>Nội dung</th>
-                                            <th>Ngày đăng</th>
-                                            <th>ID nhân viên</th>
-                                            <th>ID khách hàng</th>
-                                            <th>Trạng thái</th>
-                                            <th>Chức năng</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        @{
-                                            foreach (var item in Model)
-                                            {
-                                                if (item.TrangThai == 2)
-                                                {
-                                                    <tr>
-                                                        <td data-b-a-s="thin">@item.MaBV</td>
-                                                        <td data-b-a-s="thin">@item.TieuDe</td>
-                                                        <td data-b-a-s="thin">@item.NoiDung</td>
-                                                        <td data-b-a-s="thin">@item.NgayDang</td>
-                                                        <td data-b-a-s="thin">@item.MaNV</td>
-                                                        <td data-b-a-s="thin">@item.MaKH</td>
-                                                        <td data-b-a-s="thin">
-                                                            <div class="btn btn-sm btn-info">
-                                                                Từ chối
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <button class="btn btn-danger btn-sm edit" id="xoaTT">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                }
-
-                                            }
-                                        }
-                                    </tbody>
-                                </table>
+        <div id="menu1" class="tab-pane fade">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Danh sách công thức đang tạm ngừng triển khai trong hệ thống </h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="button-group">
+                                <button class="btn btn-sm btn-info" id="button_excel1" title="In"><i class="fas fa-file-excel"></i> Xuất Excel</button>
                             </div>
                         </div>
                     </div>
+                    <br />
+                    <div class="table-responsive">
+                        <table data-cols-width="30,20,20,20,20,20,30" class="table table-hover table-bordered" id="dataTable1" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Tiêu đề</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Nội dung</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Ngày đăng</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID nhân viên</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID khách hàng</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Trạng thái</th>
+                                    <th data-exclude="true">Chức năng</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr data-exclude="true">
+                                    <th>ID</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Nội dung</th>
+                                    <th>Ngày đăng</th>
+                                    <th>ID nhân viên</th>
+                                    <th>ID khách hàng</th>
+                                    <th>Trạng thái</th>
+                                    <th>Chức năng</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @{
+                                    foreach (var item in Model)
+                                    {
+                                        if (item.TrangThai >= 2)
+                                        {
+                                            <tr>
+                                                <td data-b-a-s="thin">@item.MaBV</td>
+                                                <td data-b-a-s="thin">@item.TieuDe</td>
+                                                <td data-b-a-s="thin">@item.NoiDung</td>
+                                                <td data-b-a-s="thin">@item.NgayDang</td>
+                                                <td data-b-a-s="thin">@item.MaNV</td>
+                                                <td data-b-a-s="thin">@item.MaKH</td>
+                                                <td data-b-a-s="thin">
+                                                    <div class="btn btn-sm btn-info">
+                                                        Từ chối
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @{
+                                                        if (user.MaCV != "Admin")
+                                                        {
+                                                            <button class="btn btn-primary btn-sm edit" id="xetDuyetLai">
+                                                                <i class="fa fa-arrow-left"></i>
+                                                            </button>
+                                                        }
+                                                    }
+                                                    <button class="btn btn-success btn-sm edit" id="ChinhSuaTT">
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-danger btn-sm edit" id="xoaTT">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            }
-        }
+            </div>
+        </div>
 
     </div>
 </div>
@@ -457,7 +469,26 @@
         </div>
     </div>
 </div>
-
+<!--Phần mmodal yêu xầu xét duyêt lại bài viết dành cho nhân viên-->
+<div class="modal fade" id="RequestConfirmAgain" tabindex="-1" role="dialog" aria-labelledby="deletedModalLabel1" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="againModalLabel1">Xác nhận xét duyệt lai bài viết này</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc chắn muốn xét duyệt lại bài viết này?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-danger" id="btnConfirm">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section script{
     <script src="~/Content/js/tableToExcel.js"></script>
@@ -551,7 +582,7 @@
             //Kiểm tra nội dung
 
             //Chỉnh sửa nội dung bài viết
-            $('#dataTable').on('click', '#ChinhSuaTT', function () {
+            $('#dataTable, #dataTable1').on('click', '#ChinhSuaTT', function () {
                 var id = $(this).closest("tr").find("td:nth-child(1)").text();
                 var tieude = $(this).closest("tr").find("td:nth-child(2)").text();
                 var noidung = $(this).closest("tr").find("td:nth-child(3)").text();
@@ -782,6 +813,61 @@
                             } else {
                                 swal({
                                     title: "Xóa bài viết không thành công",
+                                    text: "Mã bài viết " + response.mabv + " không thể thực hiện. " + "\n" + "Nội dung lỗi: " + response.nd,
+                                    icon: "error",
+                                    button: "OK",
+                                }).then(function () {
+                                    // Thực hiện các hành động sau khi người dùng nhấn nút "OK"
+                                    $('#confirmTT').modal('hide');
+                                    location.reload(); //Reload lại dữ liệu
+                                });
+                            }
+
+                        }, error: function (xhr, status, error) {
+                            swal({
+                                title: "Lỗi",
+                                text: "Đã xảy ra lỗi trong quá trình gửi yêu cầu",
+                                icon: "error",
+                                button: "OK",
+                            }).then(function () {
+                                // Thực hiện các hành động sau khi người dùng nhấn nút "OK"
+                                $('#confirmTT').modal('hide');
+                            });
+                        }
+                    });
+                });
+            });
+            //Xét duyệt lại bài viết
+            $('#dataTable1').on('click', '#xetDuyetLai', function () {
+                var mabv = $(this).closest('tr').find('td:first-child').text();
+
+                $('#againModalLabel1').html('Xác nhận xét duyệt lại ' + mabv);
+                $('#RequestConfirmAgain').modal('show');
+
+                $('#btnConfirm').on('click', function () {
+                    $.ajax({
+                        url: '/Admin/xetDuyetLaiTT',
+                        type: 'POST',
+                        data: JSON.stringify({ MaBV: mabv }),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "Json",
+                        success: function (response) {
+                            // Hiển thị thông báo thành công (nếu cần thiết)
+                            if (response.success == true) {
+                                swal({
+                                    title: "Yều cầu Xét duyệt lại bài viết thành công",
+                                    text: "Mã bài viết: " + response.mabv + " đã được gửi yêu cầu lại!",
+                                    icon: "success",
+                                    button: "OK",
+                                }).then(function () {
+                                    // Thực hiện các hành động sau khi người dùng nhấn nút "OK"
+                                    $('#confirmTT').modal('hide');
+                                    location.reload(); //Reload lại dữ liệu
+                                    //$row.remove();
+                                });
+                            } else {
+                                swal({
+                                    title: "Yều cầu Xét duyệt lại không thành công",
                                     text: "Mã bài viết " + response.mabv + " không thể thực hiện. " + "\n" + "Nội dung lỗi: " + response.nd,
                                     icon: "error",
                                     button: "OK",

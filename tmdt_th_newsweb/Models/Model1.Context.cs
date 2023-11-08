@@ -194,5 +194,14 @@ namespace tmdt_th_newsweb.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_XoaNV", maNVParameter);
         }
+    
+        public virtual int sp_XetDuyetLaiTT(string idbv)
+        {
+            var idbvParameter = idbv != null ?
+                new ObjectParameter("idbv", idbv) :
+                new ObjectParameter("idbv", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_XetDuyetLaiTT", idbvParameter);
+        }
     }
 }
