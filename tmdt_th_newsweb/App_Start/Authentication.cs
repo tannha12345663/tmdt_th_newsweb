@@ -11,6 +11,7 @@ namespace tmdt_th_newsweb.App_Start
     public class Authentication : AuthorizeAttribute
     {
         public string MaChucVu { get; set; }
+        public string MaChucVu2 { get; set; }
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             //1.Check session  : Đã đăng nhập vào hệ thống = > cho thực hiện filterContext
@@ -25,7 +26,7 @@ namespace tmdt_th_newsweb.App_Start
                 #region 2. Check quyền : Có quyền thì cho thực hiện filterContext
                 //Ngược lại thì cho trở lại trang đăng nhập  = > Trang từ chối truy cập
                 TMDT_TH_newsWebEntities db = new TMDT_TH_newsWebEntities();
-                var count = db.NhanViens.Count(m => m.MaCV == nvSession.MaCV && m.MaCV == MaChucVu);
+                var count = db.NhanViens.Count(m => m.MaCV == nvSession.MaCV && (m.MaCV == MaChucVu || m.MaCV == MaChucVu2));
                 if (count != 0)
                 {
                     return;

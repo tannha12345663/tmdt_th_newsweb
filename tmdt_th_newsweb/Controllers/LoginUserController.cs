@@ -36,6 +36,12 @@ namespace tmdt_th_newsweb.Controllers
                     //return View("Login");
                     return RedirectToAction("TrangChu", "Admin");
                 }
+                else if(data.MaCV.ToString() == "NV")
+                {
+                    TempData["error"] = "Đăng nhập thành công!";
+                    //return View("Login");
+                    return RedirectToAction("TrangChu", "Admin");
+                }
                 else
                 {
                     TempData["error"] = "Chưa có chức vụ này trong hệ thông";

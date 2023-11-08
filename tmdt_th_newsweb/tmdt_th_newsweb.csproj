@@ -2059,6 +2059,7 @@
     <Content Include="Views\LoginUser\Login.cshtml" />
     <Content Include="Views\Admin\TrangChu.cshtml" />
     <Content Include="Views\Admin\DSTT.cshtml" />
+    <Content Include="Views\Admin\DSNV.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

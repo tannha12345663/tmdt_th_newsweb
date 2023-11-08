@@ -222,10 +222,22 @@
           <Parameter Name="idbv" Type="varchar" Mode="In" />
           <Parameter Name="tieude" Type="nvarchar" Mode="In" />
           <Parameter Name="noidung" Type="nvarchar" Mode="In" />
-          <Parameter Name="ngaydang" Type="datetime" Mode="In" />
           <Parameter Name="ngaysua" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="sp_ChinhSuaNV" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MaNV" Type="varchar" Mode="In" />
+          <Parameter Name="TenNV" Type="nvarchar" Mode="In" />
+          <Parameter Name="DiaChi" Type="nvarchar" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="SDT" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+          <Parameter Name="Password" Type="nvarchar" Mode="In" />
+          <Parameter Name="MaCV" Type="varchar" Mode="In" />
+          <Parameter Name="HinhAnh" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_LockTT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="idbv" Type="varchar" Mode="In" />
           <Parameter Name="trangthai" Type="int" Mode="In" />
-          <Parameter Name="manv" Type="varchar" Mode="In" />
         </Function>
         <Function Name="sp_ThemBV" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="tieude" Type="nvarchar" Mode="In" />
@@ -236,8 +248,20 @@
           <Parameter Name="manv" Type="varchar" Mode="In" />
           <Parameter Name="makh" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="sp_ThemNV" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TenNV" Type="nvarchar" Mode="In" />
+          <Parameter Name="DiaChi" Type="nvarchar" Mode="In" />
+          <Parameter Name="Email" Type="nvarchar" Mode="In" />
+          <Parameter Name="SDT" Type="nvarchar" Mode="In" />
+          <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+          <Parameter Name="MaCV" Type="varchar" Mode="In" />
+          <Parameter Name="HinhAnh" Type="nvarchar" Mode="In" />
+        </Function>
         <Function Name="sp_XoaBV" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="idbv" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="sp_XoaNV" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="MaNV" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="TMDT_TH_newsWebModelStoreContainer">
           <EntitySet Name="BaiViet" EntityType="Self.BaiViet" Schema="dbo" store:Type="Tables" />
@@ -579,10 +603,7 @@
             <Parameter Name="idbv" Mode="In" Type="String" />
             <Parameter Name="tieude" Mode="In" Type="String" />
             <Parameter Name="noidung" Mode="In" Type="String" />
-            <Parameter Name="ngaydang" Mode="In" Type="DateTime" />
             <Parameter Name="ngaysua" Mode="In" Type="DateTime" />
-            <Parameter Name="trangthai" Mode="In" Type="Int32" />
-            <Parameter Name="manv" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_ThemBV">
             <Parameter Name="tieude" Mode="In" Type="String" />
@@ -594,7 +615,34 @@
             <Parameter Name="makh" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="sp_XoaBV">
+          <Parameter Name="idbv" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_LockTT">
             <Parameter Name="idbv" Mode="In" Type="String" />
+            <Parameter Name="trangthai" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ChinhSuaNV">
+            <Parameter Name="MaNV" Mode="In" Type="String" />
+            <Parameter Name="TenNV" Mode="In" Type="String" />
+            <Parameter Name="DiaChi" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="SDT" Mode="In" Type="String" />
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="Password" Mode="In" Type="String" />
+            <Parameter Name="MaCV" Mode="In" Type="String" />
+            <Parameter Name="HinhAnh" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_ThemNV">
+            <Parameter Name="TenNV" Mode="In" Type="String" />
+            <Parameter Name="DiaChi" Mode="In" Type="String" />
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="SDT" Mode="In" Type="String" />
+            <Parameter Name="UserName" Mode="In" Type="String" />
+            <Parameter Name="MaCV" Mode="In" Type="String" />
+            <Parameter Name="HinhAnh" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_XoaNV">
+            <Parameter Name="MaNV" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
       </Schema>
@@ -707,6 +755,10 @@
           <FunctionImportMapping FunctionImportName="sp_ChinhSuaBV" FunctionName="TMDT_TH_newsWebModel.Store.sp_ChinhSuaBV" />
           <FunctionImportMapping FunctionImportName="sp_ThemBV" FunctionName="TMDT_TH_newsWebModel.Store.sp_ThemBV" />
           <FunctionImportMapping FunctionImportName="sp_XoaBV" FunctionName="TMDT_TH_newsWebModel.Store.sp_XoaBV" />
+          <FunctionImportMapping FunctionImportName="sp_LockTT" FunctionName="TMDT_TH_newsWebModel.Store.sp_LockTT" />
+          <FunctionImportMapping FunctionImportName="sp_ChinhSuaNV" FunctionName="TMDT_TH_newsWebModel.Store.sp_ChinhSuaNV" />
+          <FunctionImportMapping FunctionImportName="sp_ThemNV" FunctionName="TMDT_TH_newsWebModel.Store.sp_ThemNV" />
+          <FunctionImportMapping FunctionImportName="sp_XoaNV" FunctionName="TMDT_TH_newsWebModel.Store.sp_XoaNV" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
