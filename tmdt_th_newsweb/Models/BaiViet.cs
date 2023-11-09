@@ -28,6 +28,7 @@ namespace tmdt_th_newsweb.Models
         public Nullable<int> TrangThai { get; set; }
         public string MaNV { get; set; }
         public string MaKH { get; set; }
+        public string HinhAnh { get; set; }
     
         public virtual KhachHang KhachHang { get; set; }
         public virtual NhanVien NhanVien { get; set; }

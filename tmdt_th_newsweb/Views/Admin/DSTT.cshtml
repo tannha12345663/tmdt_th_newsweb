@@ -118,6 +118,7 @@
                                 <tr>
                                     <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID</th>
                                     <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Tiêu đề</th>
+                                    <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Hình ảnh</th>
                                     <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Nội dung</th>
                                     <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">Ngày đăng</th>
                                     <th data-a-h="center" data-a-v="middle" data-b-a-s="thick" data-f-bold="true">ID nhân viên</th>
@@ -130,6 +131,7 @@
                                 <tr data-exclude="true">
                                     <th>ID</th>
                                     <th>Tiêu đề</th>
+                                    <th>Hình ảnh</th>
                                     <th>Nội dung</th>
                                     <th>Ngày đăng</th>
                                     <th>ID nhân viên</th>
@@ -147,6 +149,7 @@
                                             <tr>
                                                 <td data-b-a-s="thin">@item.MaBV</td>
                                                 <td data-b-a-s="thin">@item.TieuDe</td>
+                                                <td data-b-a-s="thin"><img src="@item.HinhAnh" alt="Hình ảnh" width="100" height="100"></td>
                                                 <td data-b-a-s="thin">@item.NoiDung</td>
                                                 <td data-b-a-s="thin">@item.NgayDang</td>
                                                 <td data-b-a-s="thin">@item.MaNV</td>
@@ -180,38 +183,38 @@
                                                         </td>
                                                     }
                                                 }
-                                            <td>
-                                                @{
-                                                    if (user.MaCV == "Admin" && (item.TrangThai == 0 || item.TrangThai == 3))
-                                                    {
-                                                        <button class="btn btn-success btn-sm edit" id="ChinhSuaTT">
-                                                            <i class="fa fa-edit"></i>
-                                                        </button>
-                                                        <button class="btn btn-success btn-sm save edit" id="duyetTT">
-                                                            <i class="fa fa-check"></i>
-                                                        </button>
-                                                        <button class="btn btn-danger btn-sm edit" id="tuchoiTT">
-                                                            <i class="fa fa-times" aria-hidden="true"></i>
-                                                        </button>
+                                                <td>
+                                                    @{
+                                                        if (user.MaCV == "Admin" && (item.TrangThai == 0 || item.TrangThai == 3))
+                                                        {
+                                                            <button class="btn btn-success btn-sm edit" id="ChinhSuaTT">
+                                                                <i class="fa fa-edit"></i>
+                                                            </button>
+                                                            <button class="btn btn-success btn-sm save edit" id="duyetTT">
+                                                                <i class="fa fa-check"></i>
+                                                            </button>
+                                                            <button class="btn btn-danger btn-sm edit" id="tuchoiTT">
+                                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                                            </button>
+
+                                                        }
+                                                        else if ((user.MaCV == "Admin" && item.TrangThai > 0) || (user.MaCV == "NV" && item.TrangThai == 0 || item.TrangThai == 3))
+                                                        {
+
+                                                            <button class="btn btn-success btn-sm edit" id="ChinhSuaTT">
+                                                                <i class="fa fa-edit"></i>
+                                                            </button>
+
+                                                        }
+                                                        if (user.MaCV == "Admin" || (user.MaCV == "NV" && (item.TrangThai == 0 || item.TrangThai == 3)))
+                                                        {
+                                                            <button class="btn btn-danger btn-sm edit" id="xoaTT">
+                                                                <i class="fa fa-trash"></i>
+                                                            </button>
+                                                        }
 
                                                     }
-                                                    else if ((user.MaCV == "Admin" && item.TrangThai > 0) || (user.MaCV == "NV" && item.TrangThai == 0 || item.TrangThai == 3))
-                                                    {
-
-                                                        <button class="btn btn-success btn-sm edit" id="ChinhSuaTT">
-                                                            <i class="fa fa-edit"></i>
-                                                        </button>
-
-                                                    }
-                                                    if (user.MaCV == "Admin")
-                                                    {
-                                                        <button class="btn btn-danger btn-sm edit" id="xoaTT">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    }
-
-                                                }
-                                            </td>
+                                                </td>
                                             </tr>
                                         }
 
@@ -322,7 +325,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="~/Admin/ThemTT" method="post">
+            <form action="~/Admin/ThemTT" enctype="multipart/form-data" method="post">
                 @Html.AntiForgeryToken()
                 <div class="modal-body">
                     <div class="row" id="nd">
@@ -336,6 +339,36 @@
                                 <p id="mess1"></p>
                             </div>
                         </div>
+
+                        <div class="form-group form-inline col-lg-12">
+                            <label class="control-label col-sm-5">Chọn ảnh: </label>
+                            <div class="input-group col-sm-6">
+                                <input type="file" id="HinhAnh" name="HinhAnh" accept="image/*">
+                                <span class="input-group-addon" id="icon3">
+
+                                </span>
+                            </div>
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <p id="mess3"></p>
+                            </div>
+                        </div>
+
+                        <!-- Thêm thẻ img để hiển thị hình ảnh -->
+                        <div class="form-group col-md-12">
+
+                            <label class="control-label col-sm-5" for="TenCT">Hình ảnh đã chọn: </label>
+                            <img src="" alt="Hình ảnh đã chọn" id="selectedImage" style="max-width: 100%; max-height: 200px;">
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-9" style="text-align:end">
+                                <button type="button" class="btn btn-danger btn-remove-image" id="btnRemoveImage" style="display: none;">
+                                    <i class="fa fa-times"></i> Xóa ảnh
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="form-group col-md-12">
                             <label class="control-label col-sm-5" for="TenCT">Nhập nội dung : </label>
                             <textarea class="form-control" placeholder="Nhập nội dung...." name="NoiDung" id="NoiDung" style="height:100px" required></textarea>
@@ -380,6 +413,35 @@
                                 <p id="mess6"></p>
                             </div>
                         </div>
+
+                        <div class="form-group form-inline col-lg-12">
+                            <label class="control-label col-sm-5">Chọn ảnh: </label>
+                            <div class="input-group col-sm-6">
+                                <input type="file" id="HinhAnhE" name="HinhAnh" accept="image/*">
+                                <span class="input-group-addon" id="icon12">
+
+                                </span>
+                            </div>
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <p id="mess12"></p>
+                            </div>
+                        </div>
+
+                        <!-- Thêm thẻ img để hiển thị hình ảnh -->
+                        <div class="form-group col-md-12">
+                            <label class="control-label col-sm-5" for="TenCT">Hình ảnh đã chọn: </label>
+                            <img src="" alt="Hình ảnh đã chọn" id="selectedImageE" style="max-width: 100%; max-height: 200px;">
+                            <div class="form-group col-sm-5">
+                            </div>
+                            <div class="form-group col-sm-9" style="text-align:end">
+                                <button type="button" class="btn btn-danger btn-remove-image" id="btnRemoveImageE" style="display: none;">
+                                    <i class="fa fa-times"></i> Xóa ảnh
+                                </button>
+                            </div>
+                        </div>
+
                         <div class="form-group form-inline col-lg-12" style="height:40px;">
                             <label class="control-label col-sm-5" for="TenCT">Nhập tiêu đề: </label>
                             <input class="form-control text-box single-line col-sm-5" id="EDTieuDe" name="TieuDe" type="text" required>
@@ -579,14 +641,33 @@
                     });
                 };
             });
-            //Kiểm tra nội dung
+            //Kiểm tra nội dung hình ảnh
+            //Hình ảnh
+            $('#HinhAnh').change(function () {
+                if (this.files.length > 0) {
+                    var imageUrl = URL.createObjectURL(this.files[0]);
+                    $('#selectedImage').attr('src', imageUrl);
+                    $('#btnRemoveImage').show();
+                } else {
+                    $('#selectedImage').attr('src', ''); // Xóa hình ảnh nếu không có tập tin nào được chọn
+                    $('#btnRemoveImage').hide();
+                }
+            });
+
+            $('#btnRemoveImage').click(function () {
+                $('#HinhAnh').val(''); // Xóa tập tin đã chọn
+                $('#selectedImage').attr('src', ''); // Xóa hình ảnh
+                $(this).hide();
+            });
+
 
             //Chỉnh sửa nội dung bài viết
             $('#dataTable, #dataTable1').on('click', '#ChinhSuaTT', function () {
                 var id = $(this).closest("tr").find("td:nth-child(1)").text();
                 var tieude = $(this).closest("tr").find("td:nth-child(2)").text();
-                var noidung = $(this).closest("tr").find("td:nth-child(3)").text();
-
+                var imgSrc = $(this).closest("tr").find("td:nth-child(3) img").attr('src');
+                var noidung = $(this).closest("tr").find("td:nth-child(4)").text();
+                
                 //Lấy dữ liệu hình ảnh từ database
 
                 // Đặt giá trị của các trường trong modal
@@ -669,6 +750,29 @@
                 });
 
                 $('#EDNoiDung').val(noidung);
+                $('#HinhAnhE').attr('src', imgSrc);
+                $('#selectedImageE').attr('src', imgSrc);
+
+                $('#selectedImageE').attr('src', imgSrc);
+                $('#btnRemoveImageE').show();
+
+                $('#HinhAnhE').change(function () {
+                    if (this.files.length > 0) {
+                        var imageUrl = URL.createObjectURL(this.files[0]);
+                        $('#selectedImageE').attr('src', imageUrl);
+                        $('#btnRemoveImageE').show();
+                    } else {
+                        $('#selectedImageE').attr('src', ''); // Xóa hình ảnh nếu không có tập tin nào được chọn
+                        $('#btnRemoveImageE').hide();
+                    }
+                });
+
+                $('#btnRemoveImageE').click(function () {
+                    $('#HinhAnhE').val(''); // Xóa tập tin đã chọn
+                    $('#selectedImageE').attr('src', ''); // Xóa hình ảnh
+                    $(this).hide();
+                });
+
                 $('#myModalEdit').modal('show');
 
             });
@@ -691,7 +795,7 @@
                             if (response.success == true) {
                                 swal({
                                     title: "Xét duyệt bài viết thành công",
-                                    text: "Mã bài viết: " + response.mabv + " đã được thu hồi",
+                                    text: "Mã bài viết: " + response.mabv + " đã được xét duyệt",
                                     icon: "success",
                                     button: "OK",
                                 }).then(function () {

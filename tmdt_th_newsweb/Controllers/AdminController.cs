@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -34,14 +35,22 @@ namespace tmdt_th_newsweb.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ThemTT([Bind(Include = "TieuDe,NoiDung")] BaiViet bv)
+        public ActionResult ThemTT([Bind(Include = "TieuDe,HinhAnh,NoiDung")] BaiViet bv, HttpPostedFileBase HinhAnh)
         {
             var user = (NhanVien)Session["userNV"];
             if (ModelState.IsValid)
             {
                 try
                 {
-                    db.sp_ThemBV(bv.TieuDe, bv.NoiDung, System.DateTime.Now, null, 0, user.MaNV, null);
+                    if (HinhAnh != null)
+                    {
+                        LuuAnh(bv, HinhAnh);
+                    }
+                    else
+                    {
+                        bv.HinhAnh = null;
+                    }
+                    db.sp_ThemBV(bv.TieuDe,bv.HinhAnh, bv.NoiDung, System.DateTime.Now, null, 0, user.MaNV, null);
                     db.SaveChanges();
                     TempData["messageAlert"] = "success0";
                     TempData["tieude"] = bv.TieuDe;
@@ -74,13 +83,22 @@ namespace tmdt_th_newsweb.Controllers
         //Chỉnh sửa tin tức
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ChinhSuaTT([Bind(Include = "MaBV,TieuDe,NoiDung")] BaiViet bv)
+        public ActionResult ChinhSuaTT([Bind(Include = "MaBV,HinhAnh,TieuDe,NoiDung")] BaiViet bv, HttpPostedFileBase HinhAnh)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    db.sp_ChinhSuaBV(bv.MaBV,bv.TieuDe,bv.NoiDung,System.DateTime.Now);
+                    if (HinhAnh != null)
+                    {
+                        LuuAnh(bv, HinhAnh);
+                    }
+                    else
+                    {
+                        var ha = db.BaiViets.Where(s => s.MaBV == bv.MaBV).FirstOrDefault();
+                        bv.HinhAnh = ha.HinhAnh;
+                    }
+                    db.sp_ChinhSuaBV(bv.MaBV,bv.TieuDe,bv.HinhAnh,bv.NoiDung,System.DateTime.Now);
                     db.SaveChanges();
                     TempData["messageAlert"] = "success1";
                     TempData["mabv"] = bv.MaBV;
@@ -94,6 +112,34 @@ namespace tmdt_th_newsweb.Controllers
                 return RedirectToAction("DSTT");
             }
             return HttpNotFound();
+        }
+        //Phần xử lý khi hình ảnh món ăn được gửi lên
+        public void LuuAnh(BaiViet sp, HttpPostedFileBase HinhAnh)
+        {
+            #region Hình ảnh
+            //Xác định đường dẫn lưu file : Url tương đói => tuyệt đói
+            var urlTuongdoi = "/Content/AnhBV/";
+            var urlTuyetDoi = Server.MapPath(urlTuongdoi);// Lấy đường dẫn lưu file trên server
+
+            //Check trùng tên file => Đổi tên file  = tên file cũ (ko kèm đuôi)
+            //Ảnh.jpg = > ảnh + "-" + 1 + ".jpg" => ảnh-1.jpg
+
+            string fullDuongDan = urlTuyetDoi + HinhAnh.FileName;
+            int i = 1;
+            while (System.IO.File.Exists(fullDuongDan) == true)
+            {
+                // 1. Tách tên và đuôi 
+                var ten = Path.GetFileNameWithoutExtension(HinhAnh.FileName);
+                var duoi = Path.GetExtension(HinhAnh.FileName);
+                // 2. Sử dụng biến i để chạy và cộng vào tên file mới
+                fullDuongDan = urlTuyetDoi + ten + "-" + i + duoi;
+                i++;
+                // 3. Check lại 
+            }
+            #endregion
+            //Lưu file (Kiểm tra trùng file)
+            HinhAnh.SaveAs(fullDuongDan);
+            sp.HinhAnh = urlTuongdoi + Path.GetFileName(fullDuongDan);
         }
         //Duyệt bài viết
         [HttpPost]

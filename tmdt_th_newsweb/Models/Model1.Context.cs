@@ -36,7 +36,7 @@ namespace tmdt_th_newsweb.Models
         public virtual DbSet<NhanVien> NhanViens { get; set; }
         public virtual DbSet<QuangCao> QuangCaos { get; set; }
     
-        public virtual int sp_ChinhSuaBV(string idbv, string tieude, string noidung, Nullable<System.DateTime> ngaysua)
+        public virtual int sp_ChinhSuaBV(string idbv, string tieude, string hinhanh, string noidung, Nullable<System.DateTime> ngaysua)
         {
             var idbvParameter = idbv != null ?
                 new ObjectParameter("idbv", idbv) :
@@ -46,6 +46,10 @@ namespace tmdt_th_newsweb.Models
                 new ObjectParameter("tieude", tieude) :
                 new ObjectParameter("tieude", typeof(string));
     
+            var hinhanhParameter = hinhanh != null ?
+                new ObjectParameter("hinhanh", hinhanh) :
+                new ObjectParameter("hinhanh", typeof(string));
+    
             var noidungParameter = noidung != null ?
                 new ObjectParameter("noidung", noidung) :
                 new ObjectParameter("noidung", typeof(string));
@@ -54,14 +58,18 @@ namespace tmdt_th_newsweb.Models
                 new ObjectParameter("ngaysua", ngaysua) :
                 new ObjectParameter("ngaysua", typeof(System.DateTime));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ChinhSuaBV", idbvParameter, tieudeParameter, noidungParameter, ngaysuaParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ChinhSuaBV", idbvParameter, tieudeParameter, hinhanhParameter, noidungParameter, ngaysuaParameter);
         }
     
-        public virtual int sp_ThemBV(string tieude, string noidung, Nullable<System.DateTime> ngaydang, Nullable<System.DateTime> ngaysua, Nullable<int> trangthai, string manv, string makh)
+        public virtual int sp_ThemBV(string tieude, string hinhanh, string noidung, Nullable<System.DateTime> ngaydang, Nullable<System.DateTime> ngaysua, Nullable<int> trangthai, string manv, string makh)
         {
             var tieudeParameter = tieude != null ?
                 new ObjectParameter("tieude", tieude) :
                 new ObjectParameter("tieude", typeof(string));
+    
+            var hinhanhParameter = hinhanh != null ?
+                new ObjectParameter("hinhanh", hinhanh) :
+                new ObjectParameter("hinhanh", typeof(string));
     
             var noidungParameter = noidung != null ?
                 new ObjectParameter("noidung", noidung) :
@@ -87,7 +95,7 @@ namespace tmdt_th_newsweb.Models
                 new ObjectParameter("makh", makh) :
                 new ObjectParameter("makh", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ThemBV", tieudeParameter, noidungParameter, ngaydangParameter, ngaysuaParameter, trangthaiParameter, manvParameter, makhParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ThemBV", tieudeParameter, hinhanhParameter, noidungParameter, ngaydangParameter, ngaysuaParameter, trangthaiParameter, manvParameter, makhParameter);
         }
     
         public virtual int sp_XoaBV(string idbv)
